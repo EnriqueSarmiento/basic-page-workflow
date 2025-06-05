@@ -6,12 +6,27 @@ jobs:
   firs_job:
     runs-on: ubuntu-latest
 
+    services:
+      # ## podemos usar servicios a nivel contenedor, como docker para emplear o utilizar servicos de mysql docker, etc. en este ejemplo ya estamos instalando redis en el contendores y podemos contectar con los steps.
+      # ## si queremos usar redis, como se istalar en el workflow es decir una maquina virtual, podemos usarla desde localhost. NO ES COMO EN DOCKER COMPUSE QUE PUEDES HACER USO CON SU NOMBRE O ID, SINO COMO SI LO ESTUVIERAS USANDO EN TU MAQUINA LOCAL.
+      redis:
+        image: redis
+        ports:
+          - 6379:6479
+
     steps:
       - name: Print Variable
         ## github action al ver que es un secret no lo imprime sino que hace echo de *** por proteccion. Lar variables de entorno si las puedes mostra.
         run: echo ${{ secrets.NAME }}
 
+      - name: intstall redis cli
+        run: sudo apt-get update &&  sudo apt-get install redis-tools
+
+      - name: Test redis-tools
+        run: redis-cli ping
+
       - name: setup
+        ## usando un action de github para instalar node y otras dependencias basicas de node ya que este proyecto necesuta node.
         uses: actions/setup-node@v4
         with:
           node-version: "18"
