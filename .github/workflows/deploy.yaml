@@ -20,7 +20,7 @@ jobs:
         run: echo ${{ secrets.NAME }}
 
       - name: intstall redis cli
-        run: sudo apt-get update &&  sudo apt-get install redis-tools
+        run: sudo apt-get update -y &&  sudo apt-get install redis-tools -y
 
       - name: Test redis-tools
         run: redis-cli -h localhost -p 6379 ping
