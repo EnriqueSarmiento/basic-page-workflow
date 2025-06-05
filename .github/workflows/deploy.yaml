@@ -8,4 +8,10 @@ jobs:
 
     steps:
       - name: Print Variable
+        ## github action al ver que es un secret no lo imprime sino que hace echo de *** por proteccion. Lar variables de entorno si las puedes mostra.
         run: echo ${{ secrets.NAME }}
+
+      - name: setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
