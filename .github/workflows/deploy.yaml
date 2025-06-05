@@ -23,7 +23,7 @@ jobs:
         run: sudo apt-get update &&  sudo apt-get install redis-tools
 
       - name: Test redis-tools
-        run: redis-cli ping
+        run: redis-cli -h localhost -p 6379 ping
 
       - name: setup
         ## usando un action de github para instalar node y otras dependencias basicas de node ya que este proyecto necesuta node.
