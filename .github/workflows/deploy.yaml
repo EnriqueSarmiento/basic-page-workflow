@@ -3,7 +3,7 @@ name: Deploy
 on: push
 
 jobs:
-  firs_job:
+  first_job:
     runs-on: ubuntu-latest
 
     services:
@@ -38,3 +38,6 @@ jobs:
 
       - name: Instalar dependencias
         run: npm install
+
+      - name: Run Test!!
+        run: npm run test
