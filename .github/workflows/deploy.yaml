@@ -6,26 +6,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      # ## podemos usar servicios a nivel contenedor, como docker para emplear o utilizar servicos de mysql docker, etc. en este ejemplo ya estamos instalando redis en el contendores y podemos contectar con los steps.
-      # ## si queremos usar redis, como se istalar en el workflow es decir una maquina virtual, podemos usarla desde localhost. NO ES COMO EN DOCKER COMPUSE QUE PUEDES HACER USO CON SU NOMBRE O ID, SINO COMO SI LO ESTUVIERAS USANDO EN TU MAQUINA LOCAL.
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
+    # services:
+    #   # ## podemos usar servicios a nivel contenedor, como docker para emplear o utilizar servicos de mysql docker, etc. en este ejemplo ya estamos instalando redis en el contendores y podemos contectar con los steps.
+    #   # ## si queremos usar redis, como se istalar en el workflow es decir una maquina virtual, podemos usarla desde localhost. NO ES COMO EN DOCKER COMPUSE QUE PUEDES HACER USO CON SU NOMBRE O ID, SINO COMO SI LO ESTUVIERAS USANDO EN TU MAQUINA LOCAL.
+    #   redis:
+    #     image: redis
+    #     ports:
+    #       - 6379:6379
 
     steps:
       - name: Print Variable
         ## github action al ver que es un secret no lo imprime sino que hace echo de *** por proteccion. Lar variables de entorno si las puedes mostra.
         run: echo ${{ secrets.NAME }}
 
-      - name: intstall redis cli
-        ## hay que usar sudo por tema de permisos sino dara error, y el flag  -y significa yes y eso es porque al usar sudo te pide confirmacion yes or not para instalar y atyalizar etonces se le pasa el flag -y de forma automatica.
-        run: sudo apt-get update -y &&  sudo apt-get install redis-tools -y
+      # - name: intstall redis cli
+      #   ## hay que usar sudo por tema de permisos sino dara error, y el flag  -y significa yes y eso es porque al usar sudo te pide confirmacion yes or not para instalar y atyalizar etonces se le pasa el flag -y de forma automatica.
+      #   run: sudo apt-get update -y &&  sudo apt-get install redis-tools -y
 
-      - name: Test redis-tools
-        ## aqui validamos que redis cli se instalo corretamente, ademas accedemos al redis con localhots y el puerto especificado. El ping es algo de redis que cuando se instala y se verifica que existe rsponde con PONG el ping.
-        run: redis-cli -h localhost -p 6379 ping
+      # - name: Test redis-tools
+      #   ## aqui validamos que redis cli se instalo corretamente, ademas accedemos al redis con localhots y el puerto especificado. El ping es algo de redis que cuando se instala y se verifica que existe rsponde con PONG el ping.
+      #   run: redis-cli -h localhost -p 6379 ping
 
       - name: setup
         ## usando un action de github para instalar node y otras dependencias basicas de node ya que este proyecto necesuta node.
@@ -48,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: public/
 
   deploy:
     ## usando if y la variable always permite que el segundo job se ejecute sin importar que el primero falle, incluso usando la directiva de need. existe always, success y failure. en success solo corre si el job anteriro es success y en failure solo corre si fallo, always siempre va a correr
@@ -56,6 +56,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
 
+    ## TODO ESTA SOLO EN LA DOC PARA GITHUB PAGES DEPLOYMENT
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment-pages.outputs.page_url }}
+
     steps:
-      - name: Deplying
-        run: echo "Deploying ..."
+      - name: Deploying
+        id: deployment-pages
+        uses: actions/deply-pages@v4
