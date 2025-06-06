@@ -52,7 +52,7 @@ jobs:
 
   deploy:
     ## usando if y la variable always permite que el segundo job se ejecute sin importar que el primero falle, incluso usando la directiva de need. existe always, success y failure. en success solo corre si el job anteriro es success y en failure solo corre si fallo, always siempre va a correr
-    # if: ${{ always() }}
+    # if: ${{ always() }} mm
     runs-on: ubuntu-latest
     needs: build
 
