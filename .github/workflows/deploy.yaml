@@ -20,9 +20,11 @@ jobs:
         run: echo ${{ secrets.NAME }}
 
       - name: intstall redis cli
+        ## hay que usar sudo por tema de permisos sino dara error, y el flag  -y significa yes y eso es porque al usar sudo te pide confirmacion yes or not para instalar y atyalizar etonces se le pasa el flag -y de forma automatica.
         run: sudo apt-get update -y &&  sudo apt-get install redis-tools -y
 
       - name: Test redis-tools
+        ## aqui validamos que redis cli se instalo corretamente, ademas accedemos al redis con localhots y el puerto especificado. El ping es algo de redis que cuando se instala y se verifica que existe rsponde con PONG el ping.
         run: redis-cli -h localhost -p 6379 ping
 
       - name: setup
@@ -30,3 +32,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "18"
+
+      - name: Checkout (Para utilizar nustro repositorio, sino todo lo demas dara error)
+        uses: actions/checkout@v4
+
+      - name: Instalar dependencias
+        run: npm install
