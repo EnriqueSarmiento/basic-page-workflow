@@ -45,6 +45,11 @@ jobs:
       - name: Building page
         run: npm run build
 
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
   deploy:
     ## usando if y la variable always permite que el segundo job se ejecute sin importar que el primero falle, incluso usando la directiva de need. existe always, success y failure. en success solo corre si el job anteriro es success y en failure solo corre si fallo, always siempre va a correr
     if: ${{ always() }}
